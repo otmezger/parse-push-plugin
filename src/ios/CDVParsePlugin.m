@@ -99,6 +99,36 @@ NSString *ecb;
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+- (void)setUserToInstallation:(CDVInvokedUrlCommand*) command
+{
+    NSDictionary *args = [command.arguments objectAtIndex:0];
+
+    NSString *userID = [args objectForKey:@"userID"];
+
+    if (userID !=nil){
+        PFObject *userModel = [PFObject objectWithClassName:@"_User"];
+        userModel[@"id"] =userID;
+
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        [currentInstallation setObject:userModel forKey:@"user"];
+
+
+        [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            CDVPluginResult* pluginResult = nil;
+            if (succeeded) {
+                // The object has been saved.
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+            } else {
+                // There was a problem, check error.description
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+
+
+} // end setUserToInstallation
 
 // - (void)getNotification: (CDVInvokedUrlCommand *)command
 // {

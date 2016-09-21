@@ -49,6 +49,13 @@ var ParsePlugin = {
             'unsubscribe',
             [ channel ]
         );
+    },
+    setUserToInstallation: function(regParams, successCallback, errorCallback) {
+        cordova.exec(
+            successCallback, errorCallback,
+            'ParsePlugin', 'setUserToInstallation',
+            [regParams]
+        );
     }
 };
 module.exports = ParsePlugin;
